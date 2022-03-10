@@ -1,9 +1,7 @@
 from datetime import datetime
-from tkinter.messagebox import RETRY
-from xml.dom.minidom import Identified
 from django.shortcuts import redirect, render
-from cuentasxpagarapp.models import Proveedor, EntradaDocumento
-from datetime import datetime
+from cuentasxpagarapp.models import Proveedor, EntradaDocumento, Concepto
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -23,14 +21,24 @@ def getEntradaDocumento(codigo = 0):
     else:
         return EntradaDocumento.objects.get(codigo=codigo)
 
+def getConcepto(codigo = 0):
+    if codigo == 0:
+        return Concepto.objects.all()
+    else:
+        return Concepto.objects.get(codigo=codigo)
+
+#render homePage
+@login_required(login_url='/login/')
 def home(request):
     return render(request, "./Home/Home.html")
 
 # CRUD Proveedores
+@login_required(login_url='/login/')
 def proveedores(request):
     proveedores = getProveedor()
     return render(request, "gestionProve.html",{"proveedores":proveedores})
 
+@login_required(login_url='/login/')
 def registrarproveedor(request):
     nombre= request.POST['Nombre']
     tipo= request.POST['Tipo']
@@ -41,11 +49,12 @@ def registrarproveedor(request):
     Proveedor.objects.create(nombre=nombre, tipo=tipo, cedula=cedula, balance=balance, estado=estado)
     return redirect(redirect_to)
 
-
+@login_required(login_url='/login/')
 def edicionProve(request, codigo):
     proveedor = getProveedor(codigo)
     return render(request, "edicionProve.html", {"proveedor":proveedor})
 
+@login_required(login_url='/login/')
 def editarProve(request, codigo):
     nombre= request.POST['Nombre']
     tipo= request.POST['Tipo']
@@ -61,7 +70,7 @@ def editarProve(request, codigo):
     proveedor.save()
     return redirect (redirect_to)
     
-
+@login_required(login_url='/login/')
 def eliminarProve(request, codigo):
     proveedor = getProveedor(codigo)
     proveedor.delete()
@@ -69,8 +78,51 @@ def eliminarProve(request, codigo):
     return redirect (redirect_to)
 
 
-#CRUD Entrada Documentos
+#CRUD conceptos
+@login_required(login_url='/login/')
+def conceptos(request):
+    conceptosPago = getConcepto()
+    data= {"conceptos":conceptosPago}
+    return render(request, "./conceptos/gestionCon.html", data)
 
+
+@login_required(login_url='/login/')
+def addConcepto(request):
+    descripcion= request.POST['descripcion']
+    estado = request.POST['estado']
+
+    Concepto.objects.create(descripcion=descripcion, estado=estado)
+    return redirect('/conceptos')
+
+@login_required(login_url='/login/')
+def editConcepto(request, codigoConcepto):
+    if request.method == 'GET':
+        concepto = getConcepto(codigoConcepto)
+        data = {"concepto":concepto}
+        return render(request, "./Conceptos/edicionCon.html", data)
+    elif request.method == 'POST':
+        descripcion= request.POST['descripcion']
+        estado = request.POST['estado']
+        
+        concepto = getConcepto(codigoConcepto)
+        concepto.descripcion = descripcion
+        concepto.estado = estado
+        concepto.save()
+        return redirect('/conceptos')
+   
+    return redirect('/conceptos')
+
+@login_required(login_url='/login/')
+def deleteConcepto(request, codigoConcepto):
+    Concepto = getConcepto(codigoConcepto)
+    Concepto.delete()
+
+    return redirect ('/conceptos')
+
+
+
+#CRUD Entrada Documentos
+@login_required(login_url='/login/')
 def entradaDocumentos(request):
     entradaDocumentos = getEntradaDocumento()
     proveedores = getProveedor(0, 'EntradaDocumentos')
@@ -78,6 +130,7 @@ def entradaDocumentos(request):
     data= {"entradaDocumentos":entradaDocumentos, "proveedores":proveedores, "today": today}
     return render(request, "./EntradaDocumentos/gestionEntradaDocumentos.html", data )
 
+@login_required(login_url='/login/')
 def addEntradaDocumento(request):
     numeroDocumento= request.POST['numeroDocumento']
     numeroFactura= request.POST['numeroFactura']
@@ -90,6 +143,7 @@ def addEntradaDocumento(request):
     EntradaDocumento.objects.create(numeroDocumento=numeroDocumento, numeroFactura=numeroFactura, fechaDocumento=fechaDocumento, monto=monto, fechaRegistro=fechaRegistro, proveedor=proveedor, estado=estado)
     return redirect('/entradaDocumentos')
 
+@login_required(login_url='/login/')
 def editEntradaDocumento(request, codigoEntradaDocumento):
     if request.method == 'GET':
         entradaDocumento = getEntradaDocumento(codigoEntradaDocumento)
@@ -118,6 +172,7 @@ def editEntradaDocumento(request, codigoEntradaDocumento):
    
     return redirect('/entradaDocumentos')
 
+@login_required(login_url='/login/')
 def deleteEntradaDocumento(request, codigoEntradaDocumento):
     proveedor = getEntradaDocumento(codigoEntradaDocumento)
     proveedor.delete()

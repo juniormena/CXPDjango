@@ -27,3 +27,12 @@ class EntradaDocumento(models.Model):
     def __str__(self):
         texto = "Documento no. {0} del proveedor ({1})"
         return texto.format(self.numeroDocumento, self.proveedor)
+    
+class Concepto(models.Model):
+    codigo= models.AutoField(primary_key=True)
+    descripcion=models.CharField(max_length=40)
+    estado=models.CharField(max_length=10)
+
+    def __str__(self):
+        texto = "{0} ({1})"
+        return texto.format(self.descripcion, self.codigo)

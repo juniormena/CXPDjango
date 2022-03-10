@@ -1,0 +1,68 @@
+{% extends "../Base/base.html"%}
+{%block tittle} Entrada de Conceptos {%endblock}
+{% block body %}
+{% load humanize %}
+<div class="row justify-content-center">
+    <div class="col">
+        <h2>Gestion de Conceptos de Pago</h2>
+        <div class="card">
+            <div class="card-body">
+                <form action="/addConcepto/" method="POST">{% csrf_token %}
+
+                    <div class="form-group mb-2">
+                        <label for="descripcion">Descripcion</label>
+                        <input type="text" id="descripcion" name="descripcion" class="form-control" placeholder="Descripcion de Concepto" minlength="1" maxlength="50" required/>
+                    </div>
+
+                    <div class="form-group mb-2">
+                        <label for="estado">Estado</label>
+                        <select class="form-select" name="estado" required>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                          </select>
+                    </div>
+
+                    <div class="form-group d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+                    </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col text-center">
+            <h1>Listado de Conceptos de Pago</h1>
+            <div class="row g-3 justify-content-center">
+                <div class="col-6">
+                    <input id="buscar" placeholder="Buscar por descripcion" class="form-control"/>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-success" onclick="buscarResultados(1)">Buscar</button>
+                </div>    
+              </div>
+            <div class="table-responsive">
+                <table class="table table-striped" id="tablaResultados">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Descripcion</th>
+                            <th>Estado</th>
+                            <th colspan="2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for concepto in conceptos%}
+                        <tr>
+                            <td>{{concepto.codigo}}</td>
+                            <td>{{concepto.descripcion}}</td>
+                            <td>{{concepto.estado}}</td>
+                            <td><a href="/editConcepto/{{concepto.codigo}}" class="btn btn-info">Editar</a></td>
+                            <td><a href="/deleteConcepto/{{concepto.codigo}}" class="btn btn-danger">Eliminar</a></td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
