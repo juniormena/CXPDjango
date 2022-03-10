@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'cuentasxpagarapp',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +81,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATE_INPUT_FORMATS = ['%Y-%m-%d']
 
 
 # Password validation
