@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block titulo %} Editar Concepto {% endblock %}
+
+{% block contenido %}
+
+<div class="card" style="width:18rem;">
+
+    <div class="card-body">
+      <h5 class="card-title">Datos del Concepto</h5>
+  
+      {% include 'conceptos/form.html' %}
+  
+    </div>
+  </div>
+
+{% endblock %}
