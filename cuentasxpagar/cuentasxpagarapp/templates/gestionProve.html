@@ -1,0 +1,85 @@
+{% extends "./Base/base.html"%}
+{%block tittle} Proveedores {%endblock}
+{% block body %}
+{% load humanize %}
+<div class="row justify-content-center">
+    <div class="col">
+        <h2>Gestion de Proveedores</h2>
+        <div class="card">
+            <div class="card-body">
+                <form action="/registrarproveedor/" method="POST">{% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="Nombre">Nombre</label>
+                        <input type="text" id="txtNombre" name="Nombre" class="form-control" placeholder="Nombre" minlength="6" maxlength="50" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="Tipo">Tipo de Persona</label>
+                        <select class="form-select" name="Tipo" required>
+                            <option value="Fisica">Fisica</option>
+                            <option value="Juridica">Juridica</option>
+                          </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="Cedula">Cedula</label>
+                        <input type="text" id="txtCedula" name="Cedula" class="form-control" placeholder="Cedula" minlength="10" maxlength="10" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="Balance">Balance</label>
+                        <input type="number" id="txtBalance" name="Balance" class="form-control" placeholder="Balance" min="0" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="Estado">Estado</label>
+                        <select class="form-select" name="Estado" required>
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>
+                          </select>
+                    </div>
+                    <div class="form-group d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+                    </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col text-center">
+            <h1>Listado de Proveedores</h1>
+            <div class="row g-3 justify-content-center">
+                <div class="col-6">
+                    <input id="buscar" placeholder="Buscar por nombre" class="form-control"/>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-success" onclick="buscarResultados(1)">Buscar</button>
+                </div>    
+              </div>
+            <div class="table-responsive">
+                <table class="table table-striped" id="tablaResultados">
+                    <thead>
+                        <tr>
+                            <th>Identicador</th>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Cedula</th>
+                            <th>Balance</th>
+                            <th>Estado</th>
+                            <th colspan="2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in proveedores%}
+                        <tr>
+                            <td>{{p.codigo}}</td>
+                            <td>{{p.nombre}}</td>
+                            <td>{{p.tipo}}</td>
+                            <td>{{p.cedula}}</td>
+                            <td>RD$ {{p.balance|intcomma}}</td>
+                            <td>{{p.estado}}</td>
+                            <td><a href="/edicionprove/{{p.codigo}}" class="btn btn-info">Editar</a></td>
+                            <td><a href="/eliminarProve/{{p.codigo}}" class="btn btn-danger">Eliminar</a></td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
