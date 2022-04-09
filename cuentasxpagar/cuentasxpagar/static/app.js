@@ -17,3 +17,13 @@ function buscarResultados(fila) {
       }       
     }
   }
+
+function cleanAsiento() {
+    document.getElementById('fechaDesde').value = "";
+    document.getElementById('fechaHasta').value = "";
+}
+
+function onChangeFechaDesdeAsiento(){
+  document.getElementById('fechaHasta').disabled = false;
+  document.getElementById('fechaHasta').min = document.getElementById('fechaDesde').value;
+}

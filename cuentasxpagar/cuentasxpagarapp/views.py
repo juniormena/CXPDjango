@@ -2,6 +2,7 @@ from datetime import datetime
 from django.shortcuts import redirect, render
 from cuentasxpagarapp.models import Proveedor, EntradaDocumento, Concepto
 from django.contrib.auth.decorators import login_required
+import requests
 
 # Create your views here.
 
@@ -144,6 +145,34 @@ def addEntradaDocumento(request):
     return redirect('/entradaDocumentos')
 
 @login_required(login_url='/login/')
+def crearAsiento(request):
+    sum = 0
+    fechaDesde= request.POST['fechaDesde']
+    fechaHasta= request.POST['fechaHasta']
+    data= EntradaDocumento.objects.filter(fechaDocumento__range=(fechaDesde, fechaHasta)).exclude( estado = 'Contabilizado')
+    if(len(data) == 0):
+       return redirect('/noData')
+    url = "https://contabilidad-api.azurewebsites.net/asientos_contables"
+    for dat in data:
+        sum = sum + dat.monto
+    payload= {
+        'descripcion': 'asiento de CXP',
+        'idSistemaAuxiliar': 6,
+        'idCuentaCredito': 82,
+        'idCuentDebito': 82,
+        'monto': sum
+    }
+    headers = {'Content-type': 'application/json'}
+    
+    r = requests.post(url, json = payload, headers=headers)
+    if r.json().get('id'):
+        data2 = r.json()
+        data.update(asiento_id = data2.get('id'), estado = 'Contabilizado', monto = sum)
+    return redirect('/entradaDocumentos')
+
+    
+
+@login_required(login_url='/login/')
 def editEntradaDocumento(request, codigoEntradaDocumento):
     if request.method == 'GET':
         entradaDocumento = getEntradaDocumento(codigoEntradaDocumento)
@@ -178,3 +207,7 @@ def deleteEntradaDocumento(request, codigoEntradaDocumento):
     proveedor.delete()
 
     return redirect ('/entradaDocumentos')
+
+@login_required(login_url='/login/')
+def noData(request):
+    return render(request, "./noData/noData.html")

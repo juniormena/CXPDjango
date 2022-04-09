@@ -29,6 +29,8 @@ urlpatterns = [
     #EntradaDocumentos urls
     path('entradaDocumentos/', views.entradaDocumentos),
     path('addEntradaDocumento/', views.addEntradaDocumento),
+    path('crearAsiento/', views.crearAsiento),
+    path('noData/', views.noData),
     path('editEntradaDocumento/<int:codigoEntradaDocumento>/', views.editEntradaDocumento),
     path('deleteEntradaDocumento/<int:codigoEntradaDocumento>', views.deleteEntradaDocumento),
     

@@ -23,6 +23,7 @@ class EntradaDocumento(models.Model):
     fechaRegistro=models.DateField()
     proveedor=models.CharField(max_length=50, default="")
     estado=models.CharField(max_length=10, default="")
+    asiento_id = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         texto = "Documento no. {0} del proveedor ({1})"
