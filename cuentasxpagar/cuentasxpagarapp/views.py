@@ -84,7 +84,7 @@ def eliminarProve(request, codigo):
 def conceptos(request):
     conceptosPago = getConcepto()
     data= {"conceptos":conceptosPago}
-    return render(request, "./conceptos/gestionCon.html", data)
+    return render(request, "./Conceptos/gestionCon.html", data)
 
 
 @login_required(login_url='/login/')
