@@ -1,1 +1,1 @@
-web: gunicorn cuentasxpagar.wsgi
+web: gunicorn cuentasxpagar/wsgi.py
