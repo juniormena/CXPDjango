@@ -1,3 +1,1 @@
-web: gunicorn cuentasxpagar.wsgi:application --log-file - --log-level debug
-python manage.py collectstatic --noinput
-manage.py migrate
+web: gunicorn cuentasxpagar.wsgi:application
