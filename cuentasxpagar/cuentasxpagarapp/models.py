@@ -22,7 +22,7 @@ class EntradaDocumento(models.Model):
     monto = models.PositiveIntegerField()
     fechaRegistro=models.DateField()
     proveedor=models.CharField(max_length=50, default="")
-    estado=models.CharField(max_length=10, default="")
+    estado=models.CharField(max_length=20, default="")
     asiento_id = models.PositiveIntegerField(default=0)
 
     def __str__(self):
